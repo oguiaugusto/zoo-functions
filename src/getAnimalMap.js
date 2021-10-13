@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 const data = require('../data/zoo_data');
 
 const { species } = data;
@@ -54,13 +53,13 @@ const getAnimalsBySexSorted = (animal, sex) => {
   return { [name]: names };
 };
 
-// eslint-disable-next-line complexity
+const includeAndSort = (sex) => ((sex !== 'both')
+  ? mapAnimalRegions(getAnimalsBySexSorted, sex) : mapAnimalRegions(getAnimalSorted));
+
 function getAnimalMap(options = 'none') {
   const { includeNames = false, sorted = false, sex = 'both' } = options;
-  if (includeNames && sorted) {
-    return (sex !== 'both')
-      ? mapAnimalRegions(getAnimalsBySexSorted, sex) : mapAnimalRegions(getAnimalSorted);
-  } if (includeNames) {
+  if (includeNames && sorted) return includeAndSort(sex);
+  if (includeNames) {
     return (sex !== 'both')
       ? mapAnimalRegions(getAnimalsBySex, sex) : mapAnimalRegions(getAnimalNamesOnly);
   }
