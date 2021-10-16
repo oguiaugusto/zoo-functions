@@ -7,8 +7,8 @@ function countEntrants(entrants) {
   return { adult: adult.length, senior: senior.length, child: child.length };
 }
 
-function calculateEntry(entrants = 'none') {
-  if (entrants === 'none' || Object.keys(entrants).length < 1) return 0;
+function calculateEntry(entrants) {
+  if (entrants === undefined || Object.keys(entrants).length < 1) return 0;
   const entries = Object.values(countEntrants(entrants));
   const prices = Object.values(data.prices);
   return prices.reduce((acc, price, index) => {

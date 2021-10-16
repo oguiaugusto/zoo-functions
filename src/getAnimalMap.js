@@ -2,21 +2,22 @@ const data = require('../data/zoo_data');
 
 const { species } = data;
 
-function mapAnimalRegions(func, sex = 'both') {
+function mapAnimalRegions(mapFunction, sex = 'both') {
   const regions = ['NE', 'NW', 'SE', 'SW'];
-  const toReturn = {};
+  const mapObject = {};
   regions.map((region) =>
     species.filter((specie) => specie.location === region))
-    .forEach((region) => {
+    .forEach((specie) => {
+      const regionName = specie[0].location;
       if (sex === 'both') {
-        const returnHF = region.map(func);
-        toReturn[region[0].location] = returnHF;
+        const animals = specie.map(mapFunction);
+        mapObject[regionName] = animals;
       } else {
-        const returnHF = region.map((animal) => func(animal, sex));
-        toReturn[region[0].location] = returnHF;
+        const animals = specie.map((animal) => mapFunction(animal, sex));
+        mapObject[regionName] = animals;
       }
     });
-  return toReturn;
+  return mapObject;
 }
 
 const getAnimalsByRegion = (animal) => animal.name;
@@ -53,8 +54,10 @@ const getAnimalsBySexSorted = (animal, sex) => {
   return { [name]: names };
 };
 
-const includeAndSort = (sex) => ((sex !== 'both')
-  ? mapAnimalRegions(getAnimalsBySexSorted, sex) : mapAnimalRegions(getAnimalSorted));
+const includeAndSort = (sex) => {
+  if (sex !== 'both') return mapAnimalRegions(getAnimalsBySexSorted, sex);
+  return mapAnimalRegions(getAnimalSorted);
+};
 
 function getAnimalMap(options = 'none') {
   const { includeNames = false, sorted = false, sex = 'both' } = options;
@@ -66,6 +69,6 @@ function getAnimalMap(options = 'none') {
   return mapAnimalRegions(getAnimalsByRegion);
 }
 
-// console.log(getAnimalMap());
+console.log(getAnimalMap({ includeNames: true, sex: 'female', sorted: true }));
 
 module.exports = getAnimalMap;
