@@ -69,6 +69,4 @@ function getAnimalMap(options = 'none') {
   return mapAnimalRegions(getAnimalsByRegion);
 }
 
-console.log(getAnimalMap({ includeNames: true, sex: 'female', sorted: true }));
-
 module.exports = getAnimalMap;

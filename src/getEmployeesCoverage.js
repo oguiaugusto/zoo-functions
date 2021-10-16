@@ -47,6 +47,5 @@ function getEmployeesCoverage(options = 'none') {
     locations: getLocations(getSpecies(responsibleFor)),
   };
 }
-console.log(getEmployeesCoverage());
 
 module.exports = getEmployeesCoverage;
