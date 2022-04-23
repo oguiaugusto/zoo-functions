@@ -1,51 +1,25 @@
-const data = require('../data/zoo_data');
+const { employees, species } = require('../data/zoo_data');
 
-const { species, employees } = data;
+const getEmployee = (info) => (
+  employees.find((e) => e.firstName === info || e.lastName === info || e.id === info)
+);
 
-const checkValidInfo = (info) => {
-  const allFNames = employees.map((employee) => employee.firstName);
-  const allLNames = employees.map((employee) => employee.lastName);
-  const allIds = employees.map((employee) => employee.id);
-  if (allFNames.includes(info) || allLNames.includes(info) || allIds.includes(info)) return true;
-  return false;
-};
-const getEmployeeByInfo = (info) => employees.find((employee) => {
-  const { firstName, lastName, id } = employee;
-  return (firstName === info || lastName === info || id === info);
-});
-const getSpecies = (ids) => ids.map((id) => {
-  const animal = species.find((specie) => specie.id === id);
-  return animal.name;
-});
-const getLocations = (animalNames) => animalNames.map((anim) => {
-  const animal = species.find((specie) => specie.name === anim);
-  return animal.location;
+const getSpecieById = (specie) => species.find((s) => s.id === specie);
+
+const getEmployeeObj = (employee) => ({
+  id: employee.id,
+  fullName: `${employee.firstName} ${employee.lastName}`,
+  species: employee.responsibleFor.map((specie) => getSpecieById(specie).name),
+  locations: employee.responsibleFor.map((specie) => getSpecieById(specie).location),
 });
 
-const getAllCoverages = () => employees.map((employee) => {
-  const { id, firstName, lastName, responsibleFor } = employee;
-  const fullName = `${firstName} ${lastName}`;
-  return {
-    id,
-    fullName,
-    species: getSpecies(responsibleFor),
-    locations: getLocations(getSpecies(responsibleFor)),
-  };
-});
+function getEmployeesCoverage({ name, id } = {}) {
+  const info = name || id;
+  const employee = getEmployee(info);
 
-function getEmployeesCoverage(options = 'none') {
-  const info = Object.values(options).join('');
-  if (options === 'none') return getAllCoverages();
-  if (!checkValidInfo(info)) throw new Error('Informações inválidas');
-  const employee = getEmployeeByInfo(info);
-  const { id, firstName, lastName, responsibleFor } = employee;
-  const fullName = `${firstName} ${lastName}`;
-  return {
-    id,
-    fullName,
-    species: getSpecies(responsibleFor),
-    locations: getLocations(getSpecies(responsibleFor)),
-  };
+  if (!name && !id) return employees.map((e) => getEmployeeObj(e));
+  if (!employee) throw new Error('Informações inválidas');
+  return getEmployeeObj(employee);
 }
 
 module.exports = getEmployeesCoverage;
