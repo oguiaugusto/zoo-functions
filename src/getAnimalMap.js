@@ -1,8 +1,8 @@
-const data = require('../data/zoo_data');
+const { species } = require('../data/zoo_data');
 
 const locations = ['NE', 'NW', 'SE', 'SW'];
 const getSpeciesByLocation = (location) => (
-  data.species.filter((s) => s.location === location)
+  species.filter((s) => s.location === location)
 );
 
 const getAnimalsByLocation = () => (
@@ -13,14 +13,14 @@ const getAnimalsByLocation = () => (
 
 const getAnimalsByName = (sorted, sex = '') => (
   Object.fromEntries(locations.map((l) => {
-    const speciesObj = getSpeciesByLocation(l).map(({ name, residents }) => {
+    const speciesObjs = getSpeciesByLocation(l).map(({ name, residents }) => {
       const residentsNames = residents
         .filter((r) => (sex === '' ? true : r.sex === sex))
         .map((r) => r.name);
       if (sorted) residentsNames.sort();
       return { [name]: residentsNames };
     });
-    return [l, speciesObj];
+    return [l, speciesObjs];
   }))
 );
 
