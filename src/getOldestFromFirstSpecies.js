@@ -1,13 +1,12 @@
-const data = require('../data/zoo_data');
-
-const { species, employees } = data;
+const { species, employees } = require('../data/zoo_data');
 
 function getOldestFromFirstSpecies(id) {
   const animalId = employees.find((emp) => emp.id === id).responsibleFor[0];
-  const animals = species.find((specie) => specie.id === animalId).residents;
-  const oldestAge = Math.max(...animals.map((animal) => animal.age));
-  const animal = animals.find((ani) => ani.age === oldestAge);
-  const { name, sex, age } = animal;
+  const { residents } = species.find((specie) => specie.id === animalId);
+
+  const largestAge = Math.max(...residents.map((animal) => animal.age));
+  const { name, sex, age } = residents.find((ani) => ani.age === largestAge);
+
   return [name, sex, age];
 }
 
